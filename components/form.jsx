@@ -1,21 +1,30 @@
 import { makeStyles, TextField } from "@material-ui/core"
 import { Formik } from "formik"
+import { useState } from "react"
 import * as yup from 'yup'
+import AcceptModal from "./modals/acceptModal"
+import SaveModal from "./modals/saveModal"
 
 const useStyles = makeStyles({
     wrapper: {
-        height: '245px',
+        minHeight: '245px',
         background: '#ffff',
         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.15)',
         borderRadius: '10px',
-        padding: '26px 70px 44px 0'
+        padding: '26px 70px 44px 0',
+        '@media (max-width: 991px)': {
+            padding: '26px 25px 44px 0'
+        }
     },
     inputsWrapper: {
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        '@media (max-width: 991px)': {
+            flexDirection: 'column'
+        }
     },
     input: {
-        width: '254px',
+        width: '100%',
         height: '57px',
     },
     item: {
@@ -29,12 +38,24 @@ const useStyles = makeStyles({
         '&:last-child': {
             borderRight: 'none',
             paddingRight: '0'
+        },
+        '@media (max-width: 1200px)': {
+            paddingRight: '32px',
+            paddingLeft: '32px',
+        },
+        '@media (max-width: 991px)': {
+            paddingRight: '0',
+            paddingLeft: '25px',
+            borderRight: 'none',
         }
     },
     img: {
         flex: '0 0 30px',
         height: '30px',
-        marginRight: '46px'
+        marginRight: '46px',
+        '@media (max-width: 1200px)': {
+            marginRight: '20px'
+        }
     },
     button: {
         display: 'block',
@@ -50,6 +71,19 @@ const useStyles = makeStyles({
         '&:hover': {
             background: '#009685'
         }
+    },
+    overlay: {
+        position: 'fixed',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
+        top: '0',
+        left: '0',
+        backgroundColor: 'rgba(0,0,0, .56)',
+        zIndex: '10'
+
     }
 })
 
@@ -60,6 +94,20 @@ export default function ContactsForm () {
         email: yup.string().email('Введите верный email').required('Это обязательное поле'),
         phone: yup.number().typeError('Введите верный телефон').required('Это обязательное поле'),
     })
+    const [modalVisability, setModalVisability] = useState(false)
+    const [acceptedForm, setAcceptedForm] = useState(false)
+    const [formValues, setFormValues] = useState({})
+    const closeModal = () => {
+        setModalVisability(false)
+    }
+    const acceptModal = (mode) => {
+        setAcceptedForm(mode)
+    }
+    const formikHandler = (values, {resetForm}) => {
+        setFormValues(values)
+        setModalVisability(true)
+        resetForm({values: ''})
+    }
     return (
         <div>
             <Formik initialValues={
@@ -70,10 +118,7 @@ export default function ContactsForm () {
                 }
             }
             validateOnBlur
-            onSubmit={(values, {resetForm}) => {
-                console.log(values)
-                resetForm({values: ''})
-            }}
+            onSubmit={(values, {resetForm}) => formikHandler(values, {resetForm})}
             validationSchema={validationSchema}>
                 
                 {
@@ -176,6 +221,18 @@ export default function ContactsForm () {
                 }
 
             </Formik>
+            {
+                modalVisability &&
+                <div className={classes.overlay}>
+                    {
+                        acceptedForm 
+                        ? <AcceptModal acceptModal={acceptModal}  closeModal={closeModal}/> 
+                        : <SaveModal formValues={formValues} acceptModal={acceptModal} closeModal={closeModal}/>
+                    }
+                    
+                </div>
+            }
+            
         </div>
     )
 }

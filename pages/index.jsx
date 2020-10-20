@@ -10,16 +10,25 @@ const useStyles = makeStyles({
         position: 'relative',
       minHeight: '470px',
       width: '100%',
-      padding: '20px 40px 0 40px',
+      padding: '20px 40px 10px 40px',
+      '@media (max-width: 575px)': {
+          padding: '20px 5px 10px 5px'
+      }
       
     },
     bgImg: {
         width: '100%',
+        height: '470px',
         position: "absolute",
-        height: "470px",
       top: "0",
       left: "0",
-      zIndex: "-1"
+      zIndex: "-1",
+      '@media (max-width: 767px)': {
+        height: '300px',
+    },
+      '@media (max-width: 575px)': {
+        height: '222px',
+    }
     }, 
     header: {
         display: 'flex',
@@ -42,6 +51,9 @@ const useStyles = makeStyles({
         height: '40px',
         borderRadius: '50%',
         marginRight: '20px',
+        '@media (max-width: 575px)': {
+            marginRight: '7px'
+        }
     },
     bell: {
         flex: '0 0 24px',
@@ -55,20 +67,23 @@ const useStyles = makeStyles({
         color: '#FFFF',
         fontWeight: '400',
         fontSize: '14px',
-        lineHeight: '19px'
+        lineHeight: '19px',
+        '@media (max-width: 767px)': {
+            display: 'none'
+        }
     },
     title: {
         color: '#FFF',
         marginTop: '17x',
         textTransform: 'uppercase',
         fontSize: '18px',
-        fontWeight: '400'
+        fontWeight: '400',
     },
     subtitle: {
         color: '#FFF',
         fontSize: '14px',
         fontWeight: '400',
-        marginTop: '10px'
+        marginTop: '10px',
     },
     card: {
         marginTop: '32px',
@@ -80,6 +95,11 @@ const useStyles = makeStyles({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '0 30px',
+        '@media (max-width: 575px)': {
+            padding: '0 15px',
+            height: '71px',
+            marginTop: '10px'
+        }
     },
     cardWrapper: {
         display: 'flex',
@@ -89,38 +109,58 @@ const useStyles = makeStyles({
         flex: '0 0 80px',
         height: '80px',
         borderRadius: '50%',
-        marginRight: '40px'
+        marginRight: '40px',
+        '@media (max-width: 767px)': {
+           marginRight: '15px'
+        },
+        '@media (max-width: 575px)': {
+            flex: '0 0 40px',
+            height: '40px'
+        }
     },
     cardName: {
         fontSize: '30px',
-        color: '#FFFF'
+        color: '#FFFF',
+        '@media (max-width: 767px)': {
+            fontSize: '23px'
+        },
+        '@media (max-width: 575px)': {
+            fontSize: '14px'
+        }
     },
     edit: {
+        display: 'flex',
+        alignItems: 'center',  
+        cursor: 'pointer', 
+        
+    },
+    editTitle: {
         fontSize: '14px',
         textTransform: 'uppercase',
         color: '#ffff',
         lineHeight: '140%',
-        paddingRight: '26px',
-        background: 'url("/edit.svg") right no-repeat',
+        marginRight: '8px',
         textDecoration: 'none',
-        cursor: 'pointer',
-        '&:hover': {
-            textDecoration: 'underline'
+        '@media (max-width: 991px)': {
+            display: 'none'
         }
     },
     close: {
+        display: 'flex',
+        alignItems: 'center',  
+        cursor: 'pointer',  
+    },
+    closeTitle: {
         fontSize: '14px',
         textTransform: 'uppercase',
         color: '#ffff',
         lineHeight: '140%',
-        paddingRight: '26px',
-        background: 'url("/close.svg") right no-repeat',
+        marginRight: '8px',
         textDecoration: 'none',
-        cursor: 'pointer',
-        '&:hover': {
-            textDecoration: 'underline'
+        '@media (max-width: 991px)': {
+            display: 'none'
         }
-    },
+    }
   })
 
 export default function MainLayout() {
@@ -133,7 +173,15 @@ export default function MainLayout() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div className={classes.root}>
-                <img className={classes.bgImg} src="/mainBg.png" alt="bg"/>
+                <svg className={classes.bgImg} viewBox="0 0 1481 470" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0H1481V470C1114.99 -38.4972 367.553 634.454 0 401.971V0Z" fill="url(#paint0_linear)"/>
+                    <defs>
+                        <linearGradient id="paint0_linear" x1="1481" y1="235.001" x2="-15.6763" y2="235.001" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#2196F3"/>
+                        <stop offset="1" stop-color="#1EC3AF"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
                 <div className={classes.header}>
                     <div className={classes.item}>
                         <img className={classes.bell} src="/bell.svg" alt="bell"/>
@@ -159,8 +207,17 @@ export default function MainLayout() {
                         <div className={classes.cardName}>Иванова Анна Михайловна</div>
                     </div>
                     {editMode 
-                    ? <div onClick={() => setEditmode(false)} className={classes.close}>Закрыть</div> 
-                    : <div onClick={() => setEditmode(true)} className={classes.edit}>РЕДАКТИРОВАТЬ</div>}
+                    ? 
+                    <div onClick={() => setEditmode(false)} className={classes.close}>
+                        <div className={classes.closeTitle}>Закрыть</div>
+                        <img src="/close.svg" alt="edit"/>
+                        
+                    </div> 
+                    : 
+                    <div onClick={() => setEditmode(true)} className={classes.edit}>
+                        <div className={classes.editTitle}>РЕДАКТИРОВАТЬ</div>
+                        <img src="/edit.svg" alt="edit"/>
+                    </div>}
                 </div>
                 <main className={classes.main}>
                     {editMode ? <ContactsForm/>: <Home/>}

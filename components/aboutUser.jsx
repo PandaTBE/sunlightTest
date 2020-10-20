@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { useState } from 'react';
 
 const useStyles = makeStyles({
 	wrapper: {
@@ -15,14 +16,23 @@ const useStyles = makeStyles({
 		alignItems: 'center',
 		'&:last-child': {
 			borderBottom: 'none'
-		}
+		},
+		'@media (max-width: 767px)': {
+			padding: '0 20px'
+		 },
 	},
 	icon: {
-		marginRight: '45px'
+		marginRight: '45px',
+		'@media (max-width: 575px)': {
+            marginRight: '30px'
+        }
 	},
 	info: {
 		color: '#313131',
-		fontSize: '18px'
+		fontSize: '18px',
+		'@media (max-width: 575px)': {
+            fontSize: '14px'
+        }
 	}
 })
 
