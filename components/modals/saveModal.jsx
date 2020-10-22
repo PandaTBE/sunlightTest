@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core"
+import { send } from "../../utils/postRequestFunc"
 
 const useStyles = makeStyles({
     modal: 
@@ -43,31 +44,14 @@ const useStyles = makeStyles({
 })
 
 export default function SaveModal({closeModal, acceptModal, formValues})  {
-    const classes = useStyles()
-    async function send() {
-        try {
-            const response = await fetch('http://jsonplaceholder.typicode.com/posts', {
-                method: 'POST',
-                body: JSON.stringify(formValues), // данные могут быть 'строкой' или {объектом}!
-                headers: {
-                'Content-Type': 'application/json',
-                'x-token-access': Math.random()
-                }
-            });
-            const json = await response.json();
-            console.log('Успех:', JSON.stringify(json));
-        } catch (error) {
-            console.error('Ошибка:', error);
-        }
-    }
-      
+    const classes = useStyles()    
     const acceptHandler = () => {
         acceptModal(true)
         if (formValues) {
             for (let key in formValues) {
                 localStorage.setItem(key, formValues[key])
             }
-            send()
+            send('/api/server', formValues)
         }
     }
     return (
